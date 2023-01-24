@@ -22,6 +22,16 @@ namespace Space_Runner
         int asteroidSpeeds = 5;
         int asteroidSize = 15;
 
+        //Fuel
+        List<Rectangle> fuel = new List<Rectangle>();
+        int fuelSpeed = 5;
+        int fuelSize = 15;
+
+        //Ability
+        List<Rectangle> shotAbility = new List<Rectangle>();
+        int shotSpeeds = 5;
+        int shotSize = 15;
+
         //random
         Random randGen = new Random();
 
@@ -34,6 +44,7 @@ namespace Space_Runner
         SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush yellowBrush = new SolidBrush(Color.Yellow);
         SolidBrush grayBrush = new SolidBrush(Color.Gray);
+        SolidBrush blueBrush = new SolidBrush(Color.Blue);
         public Form1()
         {
             InitializeComponent();
@@ -77,6 +88,14 @@ namespace Space_Runner
             {
                 e.Graphics.FillRectangle(grayBrush, asteroidsRight[i]);
             }
+            for (int i = 0; i < shotAbility.Count; i++)
+            {
+                e.Graphics.FillRectangle(redBrush, shotAbility[i]);
+            }
+            for (int i = 0; i < fuel.Count; i++)
+            {
+                e.Graphics.FillRectangle(blueBrush, fuel[i]);
+            }
         }
 
         private void gameLoop_Tick(object sender, EventArgs e)
@@ -108,10 +127,14 @@ namespace Space_Runner
 
             //Random asteroid
             int randValue = randGen.Next(1, 550);
+            int rand2Value = randGen.Next(1, 550);
+            int rand3Value = randGen.Next(1, 550);
             int chance = randGen.Next(1, 500);
             if (chance < 35)
             {
                 asteroidsRight.Add(new Rectangle(this.Width, randValue, asteroidSize, asteroidSize));
+                fuel.Add(new Rectangle(this.Width, rand2Value, fuelSize, fuelSize));
+                shotAbility.Add(new Rectangle(this.Width, rand3Value, shotSize, shotSize));
             }
 
             //move asteroid objects from right
@@ -121,6 +144,19 @@ namespace Space_Runner
                 asteroidsRight[i] = new Rectangle(x, asteroidsRight[i].Y, asteroidSize, asteroidSize);
             }
 
+            //move fuel
+            for (int i = 0; i < fuel.Count; i++)
+            {
+                int x = fuel[i].X - fuelSpeed;
+                fuel[i] = new Rectangle(x, fuel[i].Y, fuelSize, fuelSize);
+            }
+
+            //move ability
+            for (int i = 0; i < shotAbility.Count; i++)
+            {
+                int x = shotAbility[i].X - shotSpeeds;
+                shotAbility[i] = new Rectangle(x, shotAbility[i].Y, shotSize, shotSize);
+            }
             Refresh();
         }
         private void gameoverLabel_Click(object sender, EventArgs e)
