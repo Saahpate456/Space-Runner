@@ -36,6 +36,7 @@
             this.fuelLabel = new System.Windows.Forms.Label();
             this.gameLoop = new System.Windows.Forms.Timer(this.components);
             this.subtitleLabel = new System.Windows.Forms.Label();
+            this.fuelTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // scoreLabel
@@ -116,6 +117,10 @@
             this.subtitleLabel.TabIndex = 6;
             this.subtitleLabel.Text = "subtitleLabel";
             // 
+            // fuelTimer
+            // 
+            this.fuelTimer.Interval = 1000;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -148,6 +153,7 @@
         private System.Windows.Forms.Label fuelLabel;
         private System.Windows.Forms.Timer gameLoop;
         private System.Windows.Forms.Label subtitleLabel;
+        private System.Windows.Forms.Timer fuelTimer;
     }
 }
 

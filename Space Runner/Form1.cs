@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+using System.Threading;
 
 namespace Space_Runner
 {
@@ -29,7 +30,7 @@ namespace Space_Runner
         int fuelSpeed = 5;
         ///int fuelSize = 15;
 
-        int fuelAmount = 100;
+        int fuelAmount = 1000;
 
         //Ability
         List<Rectangle> shotAbility = new List<Rectangle>();
@@ -50,8 +51,9 @@ namespace Space_Runner
         bool sDown = false;
 
         //ability
-        Rectangle blaster = new Rectangle(0, 0, 20, 20);
+        Rectangle blaster = new Rectangle();
         bool ability = false;
+        int blasterSpeed = 15;
 
         //screen items
         int score = 0;
@@ -109,7 +111,7 @@ namespace Space_Runner
                     sDown = true;
                     break;
                 case Keys.F:
-                    ability = false;
+                    ability = true;
                     break;
             }
         }
@@ -129,6 +131,8 @@ namespace Space_Runner
             {
                 //update labels
                 scoreLabel.Text = $"Score: {score}";
+                fuelLabel.Text = $"Fuel: {fuelAmount}";
+                abilityLabel.Text = $"ability: {shotAmount}";
 
                 titleLabel.Text = "";
                 subtitleLabel.Text = "";
@@ -147,6 +151,8 @@ namespace Space_Runner
                 {
                     e.Graphics.FillRectangle(blueBrush, fuel[i]);
                 }
+                    e.Graphics.FillRectangle(goldBrush, blaster);
+                
             }
             else if (gameState == "over")
             {
@@ -163,7 +169,7 @@ namespace Space_Runner
         {
             gameState = "running";
             
-            fuelAmount = 100;
+            fuelAmount = 1000;
 
             titleLabel.Text = "";
             gameoverLabel.Text = "";
@@ -175,6 +181,11 @@ namespace Space_Runner
         }
         private void gameLoop_Tick(object sender, EventArgs e)
         {
+            if (ability == true && shotAmount > 0)
+            {
+                Rectangle blaster = new Rectangle(rocket.X, rocket.Y, 20, 20);
+                blaster.X += blasterSpeed;
+            }
             //move rocket 
             if (wDown == true && rocket.Y > 0)
             {
@@ -245,8 +256,15 @@ namespace Space_Runner
                 }
             }
 
+            //max fuel amount
+            if (fuelAmount > 1000)
+            {
+                fuelAmount = 1000;
+            }
+
             collisionCode();
-           
+            Losing();
+
             //Game updates
             score++;
             fuelAmount--;
@@ -263,6 +281,7 @@ namespace Space_Runner
                     asteroidsRight.RemoveAt(i);
                     rocket.X = 200;
                     rocket.Y = 250;
+                    fuelAmount = fuelAmount - 75;
                 }
             }
             for (int i = 0; i < fuel.Count; i++)
@@ -270,8 +289,7 @@ namespace Space_Runner
                 if (rocket.IntersectsWith(fuel[i]))
                 {
                     fuel.RemoveAt(i);
-                    fuelAmount = fuelAmount + 15;
-                    
+                    fuelAmount = fuelAmount + 100;
                 }
             }
             for (int i = 0; i < shotAbility.Count; i++)
@@ -289,14 +307,16 @@ namespace Space_Runner
         }
         void Ability()
         {
-            Rectangle blaster = new Rectangle(1000, 1000, 20, 20);
+            
 
-            blaster.X = rocket.X;
-            blaster.Y = rocket.Y;
 
-            if (ability == false)
+        }
+        void Losing()
+        {
+            if (fuelAmount < 0)
             {
-
+                gameLoop.Enabled = false;
+                gameState = "over";
             }
         }
     }
